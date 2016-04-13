@@ -1,6 +1,7 @@
 $(document).ready(function(){
   console.log('ready');
 
+
   var WIDTH = 400,
       HEIGHT = 300;
 
@@ -55,9 +56,8 @@ $(document).ready(function(){
   pointLight.position.x = 10;
   pointLight.position.y = 50;
   pointLight.position.z = 130;
-  
+
   scene.add(pointLight);
 
   renderer.render (scene, camera);
-
 });
