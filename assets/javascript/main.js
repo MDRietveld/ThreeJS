@@ -1,63 +1,49 @@
-$(document).ready(function(){
-  console.log('ready');
+var scene, camera, renderer;
 
+init();
+animate();
 
-  var WIDTH = 400,
-      HEIGHT = 300;
+function init(){
+  scene = new THREE.Scene();
+  var WIDTH = window.innerWidth,
+      HEIGHT = window.innerHeight;
 
-  //Camera attributes
-  var VIEW_ANGLE = 45,
-      ASPECT = WIDTH/ HEIGHT,
-      NEAR = 0.1,
-      FAR = 10000;
-
-  var $container = $("#container");
-
-  var renderer = new THREE.WebGLRenderer();
-  var camera =
-      new THREE.PerspectiveCamera(
-        VIEW_ANGLE,
-        ASPECT,
-        NEAR,
-        FAR);
-  var scene = new THREE.Scene();
-
-  camera.position.z = 300;
-
+  renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(WIDTH, HEIGHT);
+  document.body.apendChild(randerer.domElement);
 
-  $container.append(renderer.domElement);
-
-  var radius = 50,
-      segments = 16,
-      rings = 16;
-
-  var sphereMaterial = new THREE.MeshLambertMaterial({
-    color: 0xCC0000
-  });
-
-  var sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(
-      radius,
-      segments,
-      rings),
-    sphereMaterial);
-
-  scene.add(sphere);
+  camera = new THREE.PerspectiveCamera(45, WIDTH /HEIGHT, 0.1, 2000);
+  camera.position.set(0,6,0);
   scene.add(camera);
 
+  window.addEventListener('resize', function() {
+    var WIDTH = window.innerWidth,
+        HEIGHT = window.innerHeight;
+    renderer.setSize(WIDTH, HEIGHT);
+    camera.aspect = WIDTH / HEIGHT;
+    camera.updateProjectionmatrix();
+  });
 
-  sphere.geometry.dynamic = true;
-  sphere.geometry.verticesNeedUpdate = true;
-  sphere.geometry.normalsNeedUpdate = true;
+  renederer.setClearColorHex(0x333F47, 1);
 
+  var light = new THREE.PointLight (0xffffff);
+  light.position.set(-100, 200, 100);
+  scene.add(light);
 
-  var pointLight =new THREE.PointLight(0xFFFFFF);
-  pointLight.position.x = 10;
-  pointLight.position.y = 50;
-  pointLight.position.z = 130;
+  var loader = new THREE.JSONLoader();
+  loader.load("MODEL", function (geometry){
+    var material = new THREE.MeshLambertMaterial({color: 0x55B663});
+    mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+  });
 
-  scene.add(pointLight);
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  renderer.render (scene, camera);
-});
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+
+  renderer.render(scene, camera);
+  controls.update();
+}
