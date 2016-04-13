@@ -10,7 +10,7 @@ function init(){
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(WIDTH, HEIGHT);
-  document.body.apendChild(randerer.domElement);
+  document.body.appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(45, WIDTH /HEIGHT, 0.1, 2000);
   camera.position.set(0,6,0);
@@ -24,21 +24,20 @@ function init(){
     camera.updateProjectionmatrix();
   });
 
-  renederer.setClearColorHex(0x333F47, 1);
+  renderer.setClearColor(new THREE.Color(0x333F47, 1));
 
   var light = new THREE.PointLight (0xffffff);
   light.position.set(-100, 200, 100);
   scene.add(light);
 
   var loader = new THREE.JSONLoader();
-  loader.load("MODEL", function (geometry){
+  loader.load("./assets/models/character_test.json", function (geometry){
     var material = new THREE.MeshLambertMaterial({color: 0x55B663});
     mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
   });
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
-
 }
 
 function animate(){
